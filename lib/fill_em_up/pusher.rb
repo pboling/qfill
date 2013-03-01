@@ -36,13 +36,9 @@
 #    :ratio => 0.50 },
 #)
 module FillEmUp
-  class Pusher
+  class Pusher < FillEmUp::QueueSet
 
     attr_accessor :queues
-
-    def initialize(*args)
-      @queues = args
-    end
 
     def self.from_hashes(hashes = {})
       hashes.each do |hash|

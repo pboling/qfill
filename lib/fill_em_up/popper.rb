@@ -28,14 +28,9 @@
 #    :filter => filter1},
 #)
 module FillEmUp
-  class Popper
+  class Popper < FillEmUp::QueueSet
 
     attr_accessor :queues
-
-    def initialize(*args)
-      raise ArgumentError, "Missing required arguments for FillEmUp::Popper.new(queues)" unless args.length > 0
-      @queues = args
-    end
 
     def self.from_hashes(hashes = {})
       hashes.each do |hash|
