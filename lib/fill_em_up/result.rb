@@ -18,12 +18,13 @@
 module FillEmUp
   class Result
 
-    attr_accessor :name, :filter, :ratio, :queue_ratios
+    attr_accessor :name, :ratio, :filter, :queue_ratios
 
     def initialize(options = {})
+      raise ArgumentError, "Missing required option :name for FillEmUp::Origin.new()" unless options[:name]
       @name = options[:name]
-      @filter = options[:filter]
       @ratio = options[:ratio]
+      @filter = options[:filter]
       @queue_ratios = options[:queue_ratios]
     end
 

@@ -14,12 +14,12 @@ module FillEmUp
   class Origin
     attr_accessor :name, :elements, :backfill, :filter
 
-    def initialize(hash = {})
-      raise ArgumentError, "Missing required option :name for FillEmUp::Origin.new()" unless hash[:name]
-      @name = hash[:name]
-      @elements = hash[:elements]
-      @backfill = hash[:backfill]
-      @filter = hash[:filter]
+    def initialize(options = {})
+      raise ArgumentError, "Missing required option :name for FillEmUp::Origin.new()" unless options[:name]
+      @name = options[:name]
+      @elements = options[:elements]
+      @backfill = options[:backfill]
+      @filter = options[:filter]
     end
 
   end

@@ -7,10 +7,10 @@ module FillEmUp
   class Manager
     attr_accessor :all_queue_max, :popper, :pusher
 
-    def initialize(hash = {})
-      @all_queue_max = hash[:all_queue_max]
-      @popper = hash[:popper]
-      @pusher = hash[:pusher]
+    def initialize(options = {})
+      @all_queue_max = options[:all_queue_max]
+      @popper = options[:popper]
+      @pusher = options[:pusher]
     end
   end
 end
