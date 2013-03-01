@@ -8,7 +8,7 @@ module FillEmUp
     attr_accessor :name, :elements, :filter
 
     def initialize(options = {})
-      raise ArgumentError, "Missing required option :name for #{self.class}.new()" unless options[:name]
+      raise ArgumentError, "Missing required option :name for #{self.class}.new()" unless options && options[:name]
       @name = options[:name]
       @elements = options[:elements]
       @filter = options[:filter]

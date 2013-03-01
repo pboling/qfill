@@ -8,9 +8,12 @@ module FillEmUp
     attr_accessor :all_queue_max, :popper, :pusher
 
     def initialize(options = {})
-      @all_queue_max = options[:all_queue_max]
+      unless options[:popper] && options[:pusher]
+        raise ArgumentError, "popper and pusher are required options for #{self.class}.new(options)"
+      end
       @popper = options[:popper]
       @pusher = options[:pusher]
+      @all_queue_max = options[:all_queue_max]
     end
   end
 end

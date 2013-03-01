@@ -30,6 +30,11 @@ describe FillEmUp::Popper do
       end
       it "should instantiate with name" do
         popper = FillEmUp::Popper.new(*@origin_queues)
+        popper.queues.first.name.should == "High Queue"
+        popper.queues.last.name.should == "Low Queue"
+      end
+      it "should instantiate with elements" do
+        popper = FillEmUp::Popper.new(*@origin_queues)
         popper.queues.first.elements.should == [1,2,3,'c']
         popper.queues.last.elements.should == [7,8,'d']
       end

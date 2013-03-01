@@ -8,21 +8,20 @@ describe FillEmUp::Pusher do
     end
     context "with arguments" do
       before :each do
-        @filter = FillEmUp::Pusher.new( -> (object) { object.is_a?(Numeric)} )
+        @filter = FillEmUp::Filter.new( -> (object) { object.is_a?(Numeric)} )
         @origin_queues = [
-          FillEmUp::Origin.new(
-                                :name => "High Queue",
-                                :elements => [1, 2, 3, 'c'],
-                                :backfill => "Medium Queue",
-                                :filter => @filter),
-          FillEmUp::Origin.new( :name => "Medium Queue",
-                                :elements => ['e', 'f', 4, 5],
-                                :backfill => "Low Queue",
-                                :filter => @filter),
-          FillEmUp::Origin.new( :name => "Low Queue",
-                                :elements => [7, 8, 'd'],
-                                :backfill => nil,
-                                :filter => @filter)
+          FillEmUp::Result.new({  :name => "Top Results",
+                                  :ratio => 0.4,
+                                  :queue_ratios => {
+                                    "High Price" => 0.2,
+                                    "Medium Price" => 0.3,
+                                    "Low Price" => 0.5 } }),
+          FillEmUp::Result.new( {  :name => "Page Results",
+                                   :ratio => 0.6,
+                                   :queue_ratios => {
+                                     "High Price" => 0.5,
+                                     "Medium Price" => 0.3,
+                                     "Low Price" => 0.2 } })
         ]
       end
       it "should not raise any errors" do
@@ -30,8 +29,8 @@ describe FillEmUp::Pusher do
       end
       it "should instantiate with name" do
         popper = FillEmUp::Pusher.new(*@origin_queues)
-        popper.queues.first.elements.should == [1,2,3,'c']
-        popper.queues.last.elements.should == [7,8,'d']
+        popper.queues.first.name.should == "Top Results"
+        popper.queues.last.name.should == "Page Results"
       end
     end
   end

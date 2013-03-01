@@ -18,7 +18,7 @@
 #  )
 #)
 #
-#pusher = FillEmUp::Pusher.from_hash(
+#pusher = FillEmUp::Pusher.from_arary_of_hashes([
 #  { :name => "First Result",
 #    :ratio => 0.125,
 #    :filter => filter3,
@@ -34,16 +34,35 @@
 #    :ratio => 0.125 },
 #  { :name => "Fourth Result",
 #    :ratio => 0.50 },
-#)
+#])
 module FillEmUp
   class Pusher < FillEmUp::QueueSet
 
     attr_accessor :queues
 
-    def self.from_hashes(hashes = {})
-      hashes.each do |hash|
-        FillEmUp::Result.new(hash)
+    def initialize(*args)
+      super(*args)
+      with_ratio = self.queues.map {|x| x.ratio}.compact
+      ratio_to_split = with_ratio.inject(0, :+)
+      num_without_ratio = self.queues.length - with_ratio.length
+      if num_without_ratio > 0 && ratio_to_split < 1
+        equal_portion = ratio_to_split / num_without_ratio
+        self.queues.each do |queue|
+          if queue.ratio.nil?
+            queue.tap do |q|
+              q.ratio = equal_portion
+            end
+          end
+        end
       end
+    end
+
+    def self.from_arary_of_hashes(hashes = {})
+      args = []
+      hashes.each do |hash|
+        args << FillEmUp::Result.new(hash)
+      end
+      FillEmUp::Pusher.new(*args)
     end
 
   end
