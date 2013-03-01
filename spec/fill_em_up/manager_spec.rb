@@ -15,22 +15,34 @@ describe FillEmUp::Manager do
       end
     end
     context "with only pusher" do
-      pusher = FillEmUp::Pusher.from_arary_of_hashes(
-        [{ :name => "Some Result",
-          :ratio => 0.25 }] )
       it "should raise ArgumentError" do
+        pusher = FillEmUp::Pusher.from_arary_of_hashes(
+          [{ :name => "Some Result",
+             :ratio => 0.25 }] )
         expect { FillEmUp::Manager.new(:pusher => pusher) }.to raise_error(ArgumentError)
       end
     end
-    context "with name" do
+    context "with popper and pusher" do
       before :each do
-        @arguments = { :name => "High Queue" }
+        @popper = FillEmUp::Popper.from_arary_of_hashes(
+          [{ :name => "High Queue",
+             :elements => [1,2,3]}] )
+        @pusher = FillEmUp::Pusher.from_arary_of_hashes(
+          [{ :name => "Some Result",
+             :ratio => 0.25 }] )
+        @arguments = {
+          :pusher => @pusher,
+          :popper => @popper
+        }
       end
       it "should not raise any errors" do
-        expect { FillEmUp::Origin.new(@arguments) }.to_not raise_error
+        expect { FillEmUp::Manager.new(@arguments) }.to_not raise_error
       end
-      it "should instantiate with name" do
-        FillEmUp::Origin.new(@arguments).name.should == 'High Queue'
+      it "should instantiate with pusher" do
+        FillEmUp::Manager.new(@arguments).pusher.should == @pusher
+      end
+      it "should instantiate with popper" do
+        FillEmUp::Manager.new(@arguments).popper.should == @popper
       end
     end
   end
