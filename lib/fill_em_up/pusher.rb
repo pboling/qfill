@@ -18,7 +18,7 @@
 #  )
 #)
 #
-#pusher = FillEmUp::Pusher.from_arary_of_hashes([
+#pusher = FillEmUp::Pusher.from_array_of_hashes([
 #  { :name => "First Result",
 #    :ratio => 0.125,
 #    :filter => filter3,
@@ -57,10 +57,9 @@ module FillEmUp
       end
     end
 
-    def self.from_arary_of_hashes(hashes = {})
-      args = []
-      hashes.each do |hash|
-        args << FillEmUp::Result.new(hash)
+    def self.from_array_of_hashes(array_of_hashes = [])
+      args = array_of_hashes.map do |hash|
+        FillEmUp::Result.new(hash)
       end
       FillEmUp::Pusher.new(*args)
     end

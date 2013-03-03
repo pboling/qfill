@@ -13,7 +13,7 @@
 #                        :filter => filter1),
 #)
 #
-#popper = FillEmUp::Popper.from_arary_of_hashes([
+#popper = FillEmUp::Popper.from_array_of_hashes([
 #  { :name => "High Queue",
 #    :elements => [Thing1, Thing3, Thing7, Thing8, Thing12, Thing15, Thing17],
 #    :backfill => "Medium Queue",
@@ -32,10 +32,9 @@ module FillEmUp
 
     attr_accessor :queues
 
-    def self.from_arary_of_hashes(hashes = {})
-      args = []
-      hashes.each do |hash|
-        args << FillEmUp::Origin.new(hash)
+    def self.from_array_of_hashes(array_of_hashes = [])
+      args = array_of_hashes.map do |hash|
+        FillEmUp::Origin.new(hash)
       end
       FillEmUp::Popper.new(*args)
     end
