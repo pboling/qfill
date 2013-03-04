@@ -8,7 +8,7 @@ Gem::Specification.new do |gem|
   gem.version       = Qfill::VERSION
   gem.authors       = ["Peter Boling"]
   gem.email         = ["peter.boling@gmail.com"]
-  gem.description   = %q{Transforms source queues into result queues using a dynamic pattern of transformation}
+  gem.description   = %q{Advanced Queue Transformation}
   gem.summary       = %q{You have a set of arrays that need to be turned into a different set of arrays
 according to a potentially non-uniform set of rules.
 

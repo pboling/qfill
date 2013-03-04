@@ -47,7 +47,7 @@ Example:
 
 Or:
 
-    popper = Qfill::Popper.from_hash(
+    popper = Qfill::Popper.from_array_of_hashes([
       { :name => "High List",
         :elements => [Thing1, Thing3, Thing7, Thing8, Thing12, Thing15, Thing17],
         :backfill => "Medium List",
@@ -58,9 +58,9 @@ Or:
         :filter => filter2},
       { :name => "Low List",
         :elements => [Thing4, Thing5, Thing9, Thing10, Thing13, Thing14, Thing18, Thing19, Thing20],
-        :backfill => nil,
-        :filter => filter1},
-    )
+        :backfill => false,
+        :filter => filter1}
+    ])
 
 There are a dynamic number of result queues that need to be filled with objects from the origination queues.
 There is a Pusher which is called to add the object from the Popper to the next result queue.
@@ -97,7 +97,7 @@ Example:
 
 Or:
 
-    pusher = Qfill::Pusher.from_hash(
+    pusher = Qfill::Pusher.from_array_of_hashes([
       { :name => "First Result",
         :ratio => 0.125,
         :filter => filter3,
@@ -113,20 +113,40 @@ Or:
         :ratio => 0.125 },
       { :name => "Fourth Result",
         :ratio => 0.50 },
-    )
+    ])
 
 There is a Manager which maintains state: always knows which queue to pop from next, and which queue to push onto next.
 
-    Qfill::Manager.new(
+    manager = Qfill::Manager.new(
       :all_list_max => 40,
       :popper => popper,
       :pusher => pusher,
     )
+    manager.fill!
+
+For the best usage please look in `spec/qfill/manager_spec.rb` and the other spec files.
 
 ## Contributing
 
 1. Fork it
 2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
+3. Commit your changes (`git commit -am ‘Added some feature’`)
 4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+5. Make sure to add tests for it. This is important so I don’t break it in a future version unintentionally.
+6. Create new Pull Request
+
+## Versioning
+
+This library aims to adhere to [Semantic Versioning 2.0.0][semver].
+Violations of this scheme should be reported as bugs. Specifically,
+if a minor or patch version is released that breaks backward
+compatibility, a new version should be immediately released that
+restores compatibility. Breaking changes to the public API will
+only be introduced with new major versions.
+As a result of this policy, you can (and should) specify a
+dependency on this gem using the [Pessimistic Version Constraint][pvc] with two digits of precision.
+For example:
+    spec.add_dependency 'qfill', '~> 0.0'
+
+[semver]: http://semver.org/
+[pvc]: http://docs.rubygems.org/read/chapter/16#page74
