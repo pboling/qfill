@@ -1,12 +1,12 @@
 require 'spec_helper'
-describe FillEmUp::Filter do
+describe Qfill::Filter do
   context "#new" do
     context "with processor" do
       before :each do
         @lambda = -> (object) { !object.nil? }
       end
       it "should instantiate with processor" do
-        FillEmUp::Filter.new(@lambda).should be_a(FillEmUp::Filter)
+        Qfill::Filter.new(@lambda).should be_a(Qfill::Filter)
       end
     end
 
@@ -16,7 +16,7 @@ describe FillEmUp::Filter do
         @arguments = ['first','second']
       end
       it "should instantiate with processor" do
-        FillEmUp::Filter.new(@lambda, *@arguments).should be_a(FillEmUp::Filter)
+        Qfill::Filter.new(@lambda, *@arguments).should be_a(Qfill::Filter)
       end
     end
   end
@@ -25,7 +25,7 @@ describe FillEmUp::Filter do
     before :each do
       @lambda = -> (object, first, second) { !object.nil? && first == first && second == 'second' }
       @arguments = ['first','second']
-      @filter = FillEmUp::Filter.new(@lambda, *@arguments)
+      @filter = Qfill::Filter.new(@lambda, *@arguments)
     end
     it "should return the correct result" do
       @filter.run('not nil').should == true
@@ -34,7 +34,7 @@ describe FillEmUp::Filter do
       before :each do
         @lambda = -> (object, special_arg1, special_arg2, first, second, third) { !object.nil? && first == first && second == 'second' && special_arg1 = 'this' && special_arg2 == 'thing' && third == 'third' }
         @arguments = ['first','second','third']
-        @filter = FillEmUp::Filter.new(@lambda, *@arguments)
+        @filter = Qfill::Filter.new(@lambda, *@arguments)
       end
       it "should properly use arity" do
         @filter.run('not nil', 'this', 'thing').should == true

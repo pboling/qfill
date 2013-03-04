@@ -1,40 +1,40 @@
 require 'spec_helper'
-describe FillEmUp::Popper do
+describe Qfill::Popper do
   context "#new" do
     context "with no arguments" do
       it "should raise ArgumentError" do
-        expect { FillEmUp::Popper.new() }.to raise_error(ArgumentError)
+        expect { Qfill::Popper.new() }.to raise_error(ArgumentError)
       end
     end
     context "with arguments" do
       before :each do
-        @filter = FillEmUp::Filter.new( -> (object) { object.is_a?(Numeric)} )
+        @filter = Qfill::Filter.new( -> (object) { object.is_a?(Numeric)} )
         @origin_queues = [
-          FillEmUp::Origin.new(
-                                :name => "High Queue",
+          Qfill::Origin.new(
+                                :name => "High List",
                                 :elements => [1, 2, 3, 'c'],
-                                :backfill => "Medium Queue",
+                                :backfill => "Medium List",
                                 :filter => @filter),
-          FillEmUp::Origin.new( :name => "Medium Queue",
+          Qfill::Origin.new( :name => "Medium List",
                                 :elements => ['e', 'f', 4, 5],
-                                :backfill => "Low Queue",
+                                :backfill => "Low List",
                                 :filter => @filter),
-          FillEmUp::Origin.new( :name => "Low Queue",
+          Qfill::Origin.new( :name => "Low List",
                                 :elements => [7, 8, 'd'],
                                 :backfill => nil,
                                 :filter => @filter)
         ]
       end
       it "should not raise any errors" do
-        expect { FillEmUp::Popper.new(*@origin_queues) }.to_not raise_error
+        expect { Qfill::Popper.new(*@origin_queues) }.to_not raise_error
       end
       it "should instantiate with name" do
-        popper = FillEmUp::Popper.new(*@origin_queues)
-        popper.queues.first.name.should == "High Queue"
-        popper.queues.last.name.should == "Low Queue"
+        popper = Qfill::Popper.new(*@origin_queues)
+        popper.queues.first.name.should == "High List"
+        popper.queues.last.name.should == "Low List"
       end
       it "should instantiate with elements" do
-        popper = FillEmUp::Popper.new(*@origin_queues)
+        popper = Qfill::Popper.new(*@origin_queues)
         popper.queues.first.elements.should == [1,2,3,'c']
         popper.queues.last.elements.should == [7,8,'d']
       end

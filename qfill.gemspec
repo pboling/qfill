@@ -1,11 +1,11 @@
 # -*- encoding: utf-8 -*-
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'fill_em_up/version'
+require 'qfill/version'
 
 Gem::Specification.new do |gem|
-  gem.name          = "fill_em_up"
-  gem.version       = FillEmUp::VERSION
+  gem.name          = "qfill"
+  gem.version       = Qfill::VERSION
   gem.authors       = ["Peter Boling"]
   gem.email         = ["peter.boling@gmail.com"]
   gem.description   = %q{Transforms source queues into result queues using a dynamic pattern of transformation}

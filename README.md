@@ -1,4 +1,4 @@
-# FillEmUp
+# Qfill
 
 This gem takes a dynamic number of queues (arrays) of things, and manages the transformation into a new set of queues,
 according to a dynamic set of guidelines.
@@ -7,7 +7,7 @@ according to a dynamic set of guidelines.
 
 Add this line to your application's Gemfile:
 
-    gem 'fill_em_up'
+    gem 'qfill'
 
 And then execute:
 
@@ -15,9 +15,9 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install fill_em_up
+    $ gem install qfill
 
-## Usage & Queue Fill Methodology
+## Usage & List Fill Methodology
 
 There will be a dynamic number of origination queues each containing a set of snapshots which are grouped together by
 some matching criteria.
@@ -27,19 +27,19 @@ Origin keeps popping until an object is validated for as a result-worthy object.
 
 Example:
 
-    filter1 = FillEmUp::Filter.new( -> (object, stuff, stank) { object.is_awesome_enough_to_be_in_results?(stuff, stank) }, stuff, stank)
-    filter2 = FillEmUp::Filter.new( -> (object, rank, bank) { object.is_awesome_enough_to_be_in_results?(rank, bank) }, rank, bank)
+    filter1 = Qfill::Filter.new( -> (object, stuff, stank) { object.is_awesome_enough_to_be_in_results?(stuff, stank) }, stuff, stank)
+    filter2 = Qfill::Filter.new( -> (object, rank, bank) { object.is_awesome_enough_to_be_in_results?(rank, bank) }, rank, bank)
 
-    popper = FillEmUp::Popper.new(
-      FillEmUp::Origin.new( :name => "High Queue",
+    popper = Qfill::Popper.new(
+      Qfill::Origin.new( :name => "High List",
                             :elements => [Thing1, Thing3],
-                            :backfill => "Medium Queue",
+                            :backfill => "Medium List",
                             :filter => filter1),
-      FillEmUp::Origin.new( :name => "Medium Queue",
+      Qfill::Origin.new( :name => "Medium List",
                             :elements => [Thing2, Thing6],
-                            :backfill => "Low Queue",
+                            :backfill => "Low List",
                             :filter => filter2),
-      FillEmUp::Origin.new( :name => "Low Queue",
+      Qfill::Origin.new( :name => "Low List",
                             :elements => [Thing4, Thing5],
                             :backfill => nil,
                             :filter => filter1),
@@ -47,16 +47,16 @@ Example:
 
 Or:
 
-    popper = FillEmUp::Popper.from_hash(
-      { :name => "High Queue",
+    popper = Qfill::Popper.from_hash(
+      { :name => "High List",
         :elements => [Thing1, Thing3, Thing7, Thing8, Thing12, Thing15, Thing17],
-        :backfill => "Medium Queue",
+        :backfill => "Medium List",
         :filter => filter1},
-      { :name => "Medium Queue",
+      { :name => "Medium List",
         :elements => [Thing2, Thing6, Thing11, Thing 16],
-        :backfill => "Low Queue",
+        :backfill => "Low List",
         :filter => filter2},
-      { :name => "Low Queue",
+      { :name => "Low List",
         :elements => [Thing4, Thing5, Thing9, Thing10, Thing13, Thing14, Thing18, Thing19, Thing20],
         :backfill => nil,
         :filter => filter1},
@@ -73,38 +73,38 @@ When queue ratios are not given an even split is assumed.
 
 Example:
 
-    filter3 = FillEmUp::Filter.new( -> (object, stuff, stank) { object.can_be_best_results?(stuff, stank) }, stuff, stank)
+    filter3 = Qfill::Filter.new( -> (object, stuff, stank) { object.can_be_best_results?(stuff, stank) }, stuff, stank)
 
-    pusher = FillEmUp::Pusher.new(
-      FillEmUp::Result.new( :name => "Best Results",
+    pusher = Qfill::Pusher.new(
+      Qfill::Result.new( :name => "Best Results",
                             :filter => filter3,
                             :ratio => 0.5,
-                            :queue_ratios => {
-                              "High Queue" => 0.4,
-                              "Medium Queue" => 0.2,
-                              "Low Queue" => 0.4
+                            :list_ratios => {
+                              "High List" => 0.4,
+                              "Medium List" => 0.2,
+                              "Low List" => 0.4
                             }
                           ),
-      FillEmUp::Result.new( :name => "More Results",
+      Qfill::Result.new( :name => "More Results",
                             :ratio => 0.5,
-                            :queue_ratios => {
-                              "High Queue" => 0.2,
-                              "Medium Queue" => 0.4,
-                              "Low Queue" => 0.4
+                            :list_ratios => {
+                              "High List" => 0.2,
+                              "Medium List" => 0.4,
+                              "Low List" => 0.4
                             }
       )
     )
 
 Or:
 
-    pusher = FillEmUp::Pusher.from_hash(
+    pusher = Qfill::Pusher.from_hash(
       { :name => "First Result",
         :ratio => 0.125,
         :filter => filter3,
         :ratios => {
-          "High Queue" => 0.4,
-          "Medium Queue" => 0.2,
-          "Low Queue" => 0.4
+          "High List" => 0.4,
+          "Medium List" => 0.2,
+          "Low List" => 0.4
         }
       },
       { :name => "Second Result",
@@ -117,8 +117,8 @@ Or:
 
 There is a Manager which maintains state: always knows which queue to pop from next, and which queue to push onto next.
 
-    FillEmUp::Manager.new(
-      :all_queue_max => 40,
+    Qfill::Manager.new(
+      :all_list_max => 40,
       :popper => popper,
       :pusher => pusher,
     )
