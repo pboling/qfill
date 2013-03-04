@@ -1,4 +1,4 @@
-# Qfill
+# Qfill - Advanced Queue Tranformations
 
 This gem takes a dynamic number of queues (arrays) of things, and manages the transformation into a new set of queues,
 according to a dynamic set of guidelines.
