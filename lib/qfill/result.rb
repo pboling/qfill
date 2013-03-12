@@ -110,7 +110,11 @@ module Qfill
     end
 
     def is_full?
-      self.elements.length >= self.max
+      self.fill_count >= self.max
+    end
+
+    def to_s
+      "Qfill::Result: ratio: #{self.ratio}, list_ratios: #{self.list_ratios}, fill_tracker: #{self.fill_tracker}, fill_count: #{self.fill_count}, filter: #{!!self.filter ? 'Yes' : 'No'}, current_list_ratio_index: #{self.current_list_ratio_index}, max: #{self.max}"
     end
   end
 end
