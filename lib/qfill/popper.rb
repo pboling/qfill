@@ -49,7 +49,7 @@ module Qfill
 
     def set_next_as_current!
       next_index = self.current_index + 1
-      if (next_index) == self.primary.length
+      if (next_index) >= self.primary.length
         # If we have iterated through all the queues, then we reset
         self.reset!
       else
