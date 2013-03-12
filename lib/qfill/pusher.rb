@@ -81,5 +81,13 @@ module Qfill
       Qfill::Pusher.new(*args)
     end
 
+    def more_to_fill?
+      !self.queues.select {|x| !x.is_full?}.empty?
+    end
+
+    def next_to_fill
+      self.queues.select {|x| !x.is_full?}.first
+    end
+
   end
 end
