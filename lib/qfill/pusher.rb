@@ -44,9 +44,9 @@ module Qfill
       super(*args)
       with_ratio = self.queues.map {|x| x.ratio}.compact
       ratio_to_split = (1 - with_ratio.inject(0, :+))
-      if ratio_to_split < 0
-        raise ArgumentError, "#{self.class}: mismatched ratios for queues #{with_ratio.join(' + ')} must not total more than 1"
-      end
+      #if ratio_to_split < 0
+      #  raise ArgumentError, "#{self.class}: mismatched ratios for queues #{with_ratio.join(' + ')} must not total more than 1"
+      #end
       num_without_ratio = self.queues.length - with_ratio.length
       if num_without_ratio > 0 && ratio_to_split <= 1
         equal_portion = ratio_to_split / num_without_ratio

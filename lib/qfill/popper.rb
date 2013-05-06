@@ -92,9 +92,5 @@ module Qfill
       self.primary.inject(0) {|counter, queue| counter += queue.elements.length}
     end
 
-    def count_current_elements
-      self.current_list.elements.length
-    end
-
   end
 end

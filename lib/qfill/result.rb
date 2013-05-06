@@ -1,13 +1,18 @@
+# :preferred is used for :draim_to_empty
+# :ratio is used for the other strategies
 # Qfill::Result.new(:name => "Best Results",
 #                      :filter => filter3,
 #                      :ratio => 0.5,
 #                      :list_ratios => {
 #                        "High List" => 0.4,
 #                        "Medium List" => 0.2,
-#                        "Low List" => 0.4 } )
+#                        "Low List" => 0.4 },
+#                      :preferred => ["High List", "Medium List"]
+# )
 module Qfill
   class Result < Qfill::List
-    attr_accessor :ratio, :list_ratios, :fill_tracker, :fill_count, :validate, :filter, :current_list_ratio_index, :max
+    attr_accessor :ratio, :list_ratios, :fill_tracker, :fill_count, :current_count, :validate, :current_list_ratio_index, :max,
+                  :strategy, :shuffle, :preferred, :preferred_potential, :preferred_potential_ratio, :max_tracker
 
     def self.get_limit_from_max_and_ratio(all_list_max, ratio)
       limit = (all_list_max * ratio).round(0)
@@ -29,8 +34,15 @@ module Qfill
       end
       @ratio = options[:ratio] || 1
       @max = 0
+      @preferred = options[:preferred] # Used by :drain_to_empty and :drain_to_limit
+      @preferred_potential = 0
+      @preferred_potential_ratio = 0
+      @strategy = options[:strategy] # nil, :drain_to_limit, :drain_to_empty or :sample
       @fill_tracker = {}
+      @max_tracker = {}
       @fill_count = 0
+      @current_count = 0
+      @shuffle = options[:shuffle] || false
       @current_list_ratio_index = 0 # Used by :sample strategy
       @validate = self.use_validation?
     end
@@ -42,6 +54,7 @@ module Qfill
     def push(objects, list_name)
       self.validate!(list_name)
       added = 0
+      self.fill_tracker[list_name] ||= 0
       objects.each do |object|
         if self.allow?(object, list_name)
           self.bump_fill_tracker!(list_name)
@@ -68,9 +81,9 @@ module Qfill
     end
 
     def bump_fill_tracker!(list_name)
-      self.fill_tracker[list_name] ||= 0
       self.fill_tracker[list_name] += 1
       self.fill_count += 1
+      self.current_count += 1
     end
 
     # Does the queue being pushed into match one of the list_ratios
@@ -107,14 +120,15 @@ module Qfill
 
     def reset!
       self.current_list_ratio_index = 0
+      self.current_count = 0
     end
 
     def is_full?
-      self.fill_count >= self.max
+      self.current_count >= self.max
     end
 
     def to_s
-      "Qfill::Result: ratio: #{self.ratio}, list_ratios: #{self.list_ratios}, fill_tracker: #{self.fill_tracker}, fill_count: #{self.fill_count}, filter: #{!!self.filter ? 'Yes' : 'No'}, current_list_ratio_index: #{self.current_list_ratio_index}, max: #{self.max}"
+      "Qfill::Result: ratio: #{self.ratio}, list_ratios: #{self.list_ratios}, fill_tracker: #{self.fill_tracker}, fill_count: #{self.fill_count}, current_count: #{self.current_count}, filter: #{!!self.filter ? 'Yes' : 'No'}, current_list_ratio_index: #{self.current_list_ratio_index}, max: #{self.max}"
     end
   end
 end

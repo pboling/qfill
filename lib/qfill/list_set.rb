@@ -17,6 +17,12 @@ module Qfill
       return self.queues.find { |queue| queue.name == key }
     end
 
+    def index_of(queue_name)
+      index = self.queues.index { |queue| queue.name == queue_name }
+      return index if index
+      raise "Fuck #{index} index is missing for #{queue_name}"
+    end
+
     def reset!
       self.current_index = 0
     end
