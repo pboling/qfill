@@ -81,15 +81,19 @@ module Qfill
     end
 
     def primary_empty?
-      self.get_primary_elements == 0
+      self.count_primary_elements == 0
     end
 
     def totally_empty?
       self.get_total_elements == 0
     end
 
-    def get_primary_elements
+    def count_primary_elements
       self.primary.inject(0) {|counter, queue| counter += queue.elements.length}
+    end
+
+    def count_current_elements
+      self.current_list.elements.length
     end
 
   end

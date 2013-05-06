@@ -27,7 +27,7 @@ module Qfill
       if ratio_leftover < 0
         raise ArgumentError, "#{self.class}: invalid list_ratios for queue '#{self.name}'. List Ratios (#{with_ratio.join(' + ')}) must not total more than 1"
       end
-      @ratio = options[:ratio]
+      @ratio = options[:ratio] || 1
       @max = 0
       @fill_tracker = {}
       @fill_count = 0

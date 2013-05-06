@@ -150,7 +150,7 @@ describe Qfill::Manager do
             @manager.popper.get_total_elements.should == 36
           end
           it "should calculate the correct popper primary elements" do
-            @manager.popper.get_primary_elements == 36
+            @manager.popper.count_primary_elements == 36
           end
           it "should calculate the correct pusher total elements" do
             @manager.pusher.get_total_elements.should == 0
@@ -164,7 +164,7 @@ describe Qfill::Manager do
             @manager.popper.get_total_elements.should == 0
           end
           it "should calculate the correct popper primary elements" do
-            @manager.popper.get_primary_elements == 0
+            @manager.popper.count_primary_elements == 0
           end
           it "should calculate the correct pusher total elements" do
             @manager.pusher.get_total_elements.should == 36
@@ -230,7 +230,7 @@ describe Qfill::Manager do
             @manager.popper.get_total_elements.should == 36
           end
           it "should calculate the correct popper primary elements" do
-            @manager.popper.get_primary_elements == 27
+            @manager.popper.count_primary_elements == 27
           end
           it "should calculate the correct pusher total elements" do
             @manager.pusher.get_total_elements.should == 0
@@ -244,7 +244,7 @@ describe Qfill::Manager do
             @manager.popper.get_total_elements.should == 9
           end
           it "should calculate the correct popper primary elements" do
-            @manager.popper.get_primary_elements == 0
+            @manager.popper.count_primary_elements == 0
           end
           it "should calculate the correct pusher total elements" do
             @manager.pusher.get_total_elements.should == 27
@@ -290,7 +290,7 @@ describe Qfill::Manager do
           :pusher => @pusher,
           :popper => @popper,
           :all_list_max => 40,
-          :strategy => :drain
+          :strategy => :drain_to_limit
         }
       end
       context "#new" do
@@ -312,7 +312,7 @@ describe Qfill::Manager do
             @manager.popper.get_total_elements.should == 36
           end
           it "should calculate the correct popper primary elements" do
-            @manager.popper.get_primary_elements == 36
+            @manager.popper.count_primary_elements == 36
           end
           it "should calculate the correct pusher total elements" do
             @manager.pusher.get_total_elements.should == 0
@@ -323,10 +323,10 @@ describe Qfill::Manager do
             @manager.fill!
           end
           it "should calculate the correct popper total elements" do
-            @manager.popper.get_total_elements.should == 0 # With drain the results do not exactly match the requested ratios.
+            @manager.popper.get_total_elements.should == 0 # With drain_to_limit the results do not exactly match the requested ratios.
           end
           it "should calculate the correct popper primary elements" do
-            @manager.popper.get_primary_elements == 0
+            @manager.popper.count_primary_elements == 0
           end
           it "should calculate the correct pusher total elements" do
             @manager.pusher.get_total_elements.should == 36
@@ -370,7 +370,7 @@ describe Qfill::Manager do
           :pusher => @pusher,
           :popper => @popper,
           :all_list_max => 40,
-          :strategy => :drain
+          :strategy => :drain_to_limit
         }
       end
       context "#new" do
@@ -392,7 +392,7 @@ describe Qfill::Manager do
             @manager.popper.get_total_elements.should == 36
           end
           it "should calculate the correct popper primary elements" do
-            @manager.popper.get_primary_elements == 27
+            @manager.popper.count_primary_elements == 27
           end
           it "should calculate the correct pusher total elements" do
             @manager.pusher.get_total_elements.should == 0
@@ -403,10 +403,10 @@ describe Qfill::Manager do
             @manager.fill!
           end
           it "should calculate the correct popper total elements" do
-            @manager.popper.get_total_elements.should == 7 # With drain the results do not exactly match the requested ratios.
+            @manager.popper.get_total_elements.should == 7 # With drain_to_limit the results do not exactly match the requested ratios.
           end
           it "should calculate the correct popper primary elements" do
-            @manager.popper.get_primary_elements == 0
+            @manager.popper.count_primary_elements == 0
           end
           it "should calculate the correct pusher total elements" do
             @manager.pusher.get_total_elements.should == 29

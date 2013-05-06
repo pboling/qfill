@@ -9,5 +9,5 @@ require "qfill/pusher"
 require "qfill/manager"
 
 module Qfill
-  # Your code goes here...
+  VERBOSE = false
 end
