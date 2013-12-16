@@ -150,3 +150,7 @@ For example:
 
 [semver]: http://semver.org/
 [pvc]: http://docs.rubygems.org/read/chapter/16#page74
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/pboling/qfill/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
