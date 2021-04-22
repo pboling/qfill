@@ -34,4 +34,5 @@ by specifying filters for handling each transformation.
   gem.require_paths = ['lib']
 
   gem.add_development_dependency 'rspec', '~> 3'
+  gem.add_development_dependency 'rake', '~> 13'
 end
