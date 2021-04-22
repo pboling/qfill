@@ -1,4 +1,10 @@
-#pusher = Qfill::Pusher.new(
+# frozen_string_literal: true
+
+# A Qfill::Pusher (which inherits from Qfill::ListSet) is a set of result data
+#   which contribute to the definition of the result set created by the Qfill::Manager.
+# Qfill::Pusher is made up of an array (called queues) of Qfill::Result objects (which inherit from Qfill::List).
+#
+# pusher = Qfill::Pusher.new(
 #  Qfill::Result.new( :name => "Best Results",
 #                        :filter => filter3,
 #                        :ratio => 0.5,
@@ -16,9 +22,9 @@
 #                          "Low List" => 0.4
 #                        }
 #  )
-#)
+# )
 #
-#pusher = Qfill::Pusher.from_array_of_hashes([
+# pusher = Qfill::Pusher.from_array_of_hashes([
 #  { :name => "First Result",
 #    :ratio => 0.125,
 #    :filter => filter3,
@@ -34,41 +40,40 @@
 #    :ratio => 0.125 },
 #  { :name => "Fourth Result",
 #    :ratio => 0.50 },
-#])
+# ])
 #
 # Pusher is made up of an array (called queues) of Result objects.
 module Qfill
   class Pusher < Qfill::ListSet
-
     def initialize(*args)
       super(*args)
-      with_ratio = self.queues.map {|x| x.ratio}.compact
-      ratio_to_split = (1 - with_ratio.inject(0, :+))
-      #if ratio_to_split < 0
+      with_ratio = queues.map(&:ratio).compact
+      ratio_to_split = (1 - with_ratio.sum)
+      # if ratio_to_split < 0
       #  raise ArgumentError, "#{self.class}: mismatched ratios for queues #{with_ratio.join(' + ')} must not total more than 1"
-      #end
-      num_without_ratio = self.queues.length - with_ratio.length
-      if num_without_ratio > 0 && ratio_to_split <= 1
+      # end
+      num_without_ratio = queues.length - with_ratio.length
+      if num_without_ratio.positive? && ratio_to_split <= 1
         equal_portion = ratio_to_split / num_without_ratio
-        self.queues.each do |queue|
-          if queue.ratio.nil?
-            queue.tap do |q|
-              q.ratio = equal_portion
-            end
+        queues.each do |queue|
+          next unless queue.ratio.nil?
+
+          queue.tap do |q|
+            q.ratio = equal_portion
           end
         end
       end
     end
 
     def current_list
-      self.queues[self.current_index]
+      queues[current_index]
     end
 
     def set_next_as_current!
-      next_index = self.current_index + 1
-      if (next_index) == self.queues.length
+      next_index = current_index + 1
+      if (next_index) == queues.length
         # If we have iterated through all the queues, then we reset
-        self.reset!
+        reset!
       else
         self.current_index = next_index
       end
@@ -82,12 +87,11 @@ module Qfill
     end
 
     def more_to_fill?
-      !self.queues.select {|x| !x.is_full?}.empty?
+      !queues.reject(&:is_full?).empty?
     end
 
     def next_to_fill
-      self.queues.select {|x| !x.is_full?}.first
+      queues.reject(&:is_full?).first
     end
-
   end
 end

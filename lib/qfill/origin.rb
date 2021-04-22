@@ -1,4 +1,6 @@
-#Qfill::Origin.new(:name => "High List",
+# frozen_string_literal: true
+
+# Qfill::Origin.new(:name => "High List",
 #                     :elements => [Thing1, Thing3],
 #                     :backfill => "Medium List",
 #                     :filter => filter1),
@@ -12,8 +14,7 @@ module Qfill
     end
 
     def has_backfill?
-      !!self.backfill
+      !!backfill
     end
-
   end
 end

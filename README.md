@@ -1,4 +1,4 @@
-# Qfill - Advanced Queue Tranformations
+# Qfill - Advanced Queue Transformations
 
 This gem takes a dynamic number of queues (arrays) of things, and manages the transformation into a new set of queues,
 according to a dynamic set of guidelines.
@@ -23,7 +23,7 @@ There will be a dynamic number of origination queues each containing a set of sn
 some matching criteria.
 There is a Popper which is called to pop the next object from the next origination queue.
 There is a Filter which is optionally called to validate any object that is popped from the origin.
-Origin keeps popping until an object is validated for as a result-worthy object.
+Origin keeps popping until an object is validated as a result-worthy object.
 
 Example:
 
@@ -150,7 +150,3 @@ For example:
 
 [semver]: http://semver.org/
 [pvc]: http://docs.rubygems.org/read/chapter/16#page74
-
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/pboling/qfill/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-

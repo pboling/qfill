@@ -1,57 +1,68 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 describe Qfill::Result do
-  context "#new" do
-    context "with no arguments" do
-      it "should raise ArgumentError" do
-        expect { Qfill::Result.new() }.to raise_error(ArgumentError)
+  describe '#new' do
+    context 'with no arguments' do
+      it 'raises ArgumentError' do
+        expect { described_class.new }.to raise_error(ArgumentError)
       end
     end
-    context "with name" do
-      before :each do
-        @arguments = { :name => "Best Results" }
+
+    context 'with name' do
+      before do
+        @arguments = { name: 'Best Results' }
       end
-      it "should not raise any errors" do
-        expect { Qfill::Result.new(@arguments) }.to_not raise_error
+
+      it 'does not raise any errors' do
+        expect { described_class.new(@arguments) }.not_to raise_error
       end
-      it "should instantiate with name" do
-        Qfill::Result.new(@arguments).name.should == 'Best Results'
-      end
-    end
-    context "with ratio" do
-      before :each do
-        @arguments = {  :name => "Best Results",
-                        :ratio => 0.5 }
-      end
-      it "should instantiate with elements" do
-        Qfill::Result.new(@arguments).ratio.should == 0.5
+
+      it 'instantiates with name' do
+        expect(described_class.new(@arguments).name).to eq('Best Results')
       end
     end
-    context "with filter" do
-      before :each do
-        lambda = -> (object) { !object.nil? }
+
+    context 'with ratio' do
+      before do
+        @arguments = {  name: 'Best Results',
+                        ratio: 0.5 }
+      end
+
+      it 'instantiates with elements' do
+        expect(described_class.new(@arguments).ratio).to eq(0.5)
+      end
+    end
+
+    context 'with filter' do
+      before do
+        lambda = ->(object) { !object.nil? }
         @filter = Qfill::Filter.new(lambda)
-        @arguments = {  :name => "Best Results",
-                        :ratio => 0.5,
-                        :filter => @filter }
+        @arguments = {  name: 'Best Results',
+                        ratio: 0.5,
+                        filter: @filter }
       end
-      it "should instantiate with filter" do
-        Qfill::Result.new(@arguments).filter.should be_a(Qfill::Filter)
-        Qfill::Result.new(@arguments).filter.should == @filter
+
+      it 'instantiates with filter' do
+        expect(described_class.new(@arguments).filter).to be_a(Qfill::Filter)
+        expect(described_class.new(@arguments).filter).to eq(@filter)
       end
     end
-    context "with list_ratios" do
-      before :each do
-        @arguments = {  :name => "Best Results",
-                        :ratio => 0.5,
-                        :list_ratios => {
-                          "High Price" => 0.4,
-                          "Medium Price" => 0.3,
-                          "Low Price" => 0.3 } }
+
+    context 'with list_ratios' do
+      before do
+        @arguments = {  name: 'Best Results',
+                        ratio: 0.5,
+                        list_ratios: {
+                          'High Price' => 0.4,
+                          'Medium Price' => 0.3,
+                          'Low Price' => 0.3
+                        } }
       end
-      it "should instantiate with elements" do
-        Qfill::Result.new(@arguments).list_ratios["High Price"].should == 0.4
+
+      it 'instantiates with elements' do
+        expect(described_class.new(@arguments).list_ratios['High Price']).to eq(0.4)
       end
     end
   end
-
 end
