@@ -33,6 +33,6 @@ by specifying filters for handling each transformation.
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ['lib']
 
-  gem.add_development_dependency 'rspec', '~> 3'
   gem.add_development_dependency 'rake', '~> 13'
+  gem.add_development_dependency 'rspec', '~> 3'
 end
