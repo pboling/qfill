@@ -747,9 +747,9 @@ describe Qfill::Manager do
         strategy: :time_slice,
         strategy_options: {
           window_size: 20,
-          window_units: "minutes",
+          window_units: 'minutes',
           pane_size: 2,
-          pane_units: "seconds"
+          pane_units: 'seconds'
         }
       }
     end
@@ -781,11 +781,11 @@ describe Qfill::Manager do
         end
 
         it 'has pusher queues that are "full" (because max starts at 0)' do
-          expect(manager.pusher.queues.count { |x| x.is_full? }).to eq(600)
+          expect(manager.pusher.queues.count(&:is_full?)).to eq(600)
         end
 
         it 'has pusher queues that are not really full' do
-          expect(manager.pusher.queues.count { |x| x.elements.length == 0 }).to eq(600)
+          expect(manager.pusher.queues.count { |x| x.elements.empty? }).to eq(600)
         end
       end
 
@@ -811,7 +811,7 @@ describe Qfill::Manager do
         end
 
         it 'has pusher queues that are full' do
-          expect(manager.pusher.queues.count { |x| x.is_full? }).to eq(600)
+          expect(manager.pusher.queues.count(&:is_full?)).to eq(600)
         end
 
         it 'has pusher queues that are not too full' do

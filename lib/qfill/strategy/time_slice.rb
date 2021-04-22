@@ -20,17 +20,17 @@ module Qfill
       end
 
       CONVERSIONS = {
-        %w(seconds seconds) => 1,
-        %w(seconds minutes) => 60,
-        %w(seconds hours) => 60 * 60,
-        %w(seconds days) => 60 * 60 * 24,
-        %w(minutes minutes) => 1,
-        %w(minutes hours) => 60,
-        %w(minutes days) => 60 * 24,
-        %w(hours hours) => 1,
-        %w(hours days) => 24,
-        %w(days days) => 1
-      }
+        %w[seconds seconds] => 1,
+        %w[seconds minutes] => 60,
+        %w[seconds hours] => 60 * 60,
+        %w[seconds days] => 60 * 60 * 24,
+        %w[minutes minutes] => 1,
+        %w[minutes hours] => 60,
+        %w[minutes days] => 60 * 24,
+        %w[hours hours] => 1,
+        %w[hours days] => 24,
+        %w[days days] => 1
+      }.freeze
 
       # If window_units == "minutes" and pane_units == "seconds", and
       #    window_size == 20 and pane_size == 2
@@ -39,8 +39,8 @@ module Qfill
       #   i.e.              600 individual panes in the (time) window, where each pane is a "result"
       def default_pusher
         ratio = 1 / num_panes.to_f
-        array = Range.new(1, num_panes).each_with_object([]) do |pane_num, array|
-          array << { name: "#{pane_num}", ratio: ratio }
+        array = Range.new(1, num_panes).each_with_object([]) do |pane_num, arr|
+          arr << { name: pane_num.to_s, ratio: ratio }
         end
         Qfill::Pusher.from_array_of_hashes(array)
       end

@@ -42,7 +42,7 @@ module Qfill
       @strategy_options = options[:strategy_options]
 
       # Allow the strategy to define the pusher when not defined by user
-      @pusher ||= self.strategy.default_pusher
+      @pusher ||= strategy.default_pusher
       unless @popper && @pusher
         raise ArgumentError, "#{self.class}: popper and pusher (except where defined by the strategy) are required options for #{self.class}.new(options)"
       end
@@ -106,13 +106,11 @@ module Qfill
       fill_count >= all_list_max
     end
 
-    def each
-      # NOTE on magic: http://blog.arkency.com/2014/01/ruby-to-enum-for-enumerator/
-      return enum_for(:each) unless block_given? # Sparkling magic!
+    def each(&block)
+      # NOTE: on magic: http://blog.arkency.com/2014/01/ruby-to-enum-for-enumerator/
+      return enum_for(:each) unless block # Sparkling magic!
 
-      pusher.each do |result|
-        yield result
-      end
+      pusher.each(&block)
     end
 
     def to_s

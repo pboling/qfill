@@ -94,13 +94,11 @@ module Qfill
       queues.reject(&:is_full?).first
     end
 
-    def each
-      # NOTE on magic: http://blog.arkency.com/2014/01/ruby-to-enum-for-enumerator/
-      return enum_for(:each) unless block_given? # Sparkling magic!
+    def each(&block)
+      # NOTE: on magic: http://blog.arkency.com/2014/01/ruby-to-enum-for-enumerator/
+      return enum_for(:each) unless block # Sparkling magic!
 
-      queues.each do |result|
-        yield result
-      end
+      queues.each(&block)
     end
   end
 end
