@@ -14,7 +14,8 @@ module Qfill
                      :primary_list_total,
                      :fill_count,
                      :fill_count=,
-                     :is_full?
+                     :is_full?,
+                     :strategy_options
       attr_accessor :added,
                     :tally,
                     :ratio_modifier
@@ -27,7 +28,7 @@ module Qfill
       end
 
       def name
-        raise NotImplementedError
+        NAME
       end
 
       def on_fill!
@@ -45,6 +46,10 @@ module Qfill
 
       def fill_up_to_ratio!
         raise NotImplementedError
+      end
+
+      def default_pusher
+        # NOOP
       end
 
       def bump!

@@ -13,23 +13,40 @@ require 'forwardable'
 module Qfill
   class Manager
     extend Forwardable
-    def_delegators :@strategy, :popper, :pusher, :result, :remaining_to_fill
-    attr_accessor :all_list_max, :primary_list_total, :popper, :pusher, :fill_count, :result
+    def_delegators :@strategy,
+                   :popper,
+                   :pusher,
+                   :result,
+                   :remaining_to_fill
+    attr_accessor :all_list_max,
+                  :primary_list_total,
+                  :popper,
+                  :pusher,
+                  :fill_count,
+                  :result,
+                  :strategy_options
 
-    STRATEGY_OPTIONS = %i[drain_to_limit drain_to_empty sample].freeze
+    STRATEGY_OPTIONS = %i[drain_to_limit drain_to_empty sample time_slice].freeze
 
     def initialize(options = {})
-      unless options[:popper] && options[:pusher]
-        raise ArgumentError, "#{self.class}: popper and pusher are required options for #{self.class}.new(options)"
-      end
-
       unless options[:strategy].nil? || STRATEGY_OPTIONS.include?(options[:strategy])
         raise ArgumentError,
               "#{self.class}: strategy is optional, but must be one of #{STRATEGY_OPTIONS.inspect} if provided"
       end
 
+      @fill_count = 0
+
       @popper = options[:popper]
       @pusher = options[:pusher]
+      @strategy_name = options[:strategy] || :drain_to_limit # or :drain_to_empty or :sample
+      @strategy_options = options[:strategy_options]
+
+      # Allow the strategy to define the pusher when not defined by user
+      @pusher ||= self.strategy.default_pusher
+      unless @popper && @pusher
+        raise ArgumentError, "#{self.class}: popper and pusher (except where defined by the strategy) are required options for #{self.class}.new(options)"
+      end
+
       # Provided by user, or defaults to the total number of elements in popper list set
       @all_list_max = if options[:all_list_max]
                         [options[:all_list_max],
@@ -38,8 +55,6 @@ module Qfill
                         popper.count_all_elements
                       end
       @primary_list_total = popper.count_primary_elements
-      @fill_count = 0
-      @strategy_name = options[:strategy] || :drain_to_limit # or :drain_to_empty or :sample
     end
 
     def strategy
@@ -50,6 +65,8 @@ module Qfill
                       Qfill::Strategy::DrainToLimit.new(self)
                     when :sample
                       Qfill::Strategy::Sample.new(self)
+                    when :time_slice
+                      Qfill::Strategy::TimeSlice.new(self)
                     end
     end
 
@@ -87,6 +104,15 @@ module Qfill
 
     def is_full?
       fill_count >= all_list_max
+    end
+
+    def each
+      # NOTE on magic: http://blog.arkency.com/2014/01/ruby-to-enum-for-enumerator/
+      return enum_for(:each) unless block_given? # Sparkling magic!
+
+      pusher.each do |result|
+        yield result
+      end
     end
 
     def to_s

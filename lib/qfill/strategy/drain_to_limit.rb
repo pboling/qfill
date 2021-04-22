@@ -4,9 +4,6 @@ module Qfill
   module Strategy
     class DrainToLimit < Qfill::Strategy::Base
       NAME = :drain_to_limit
-      def name
-        NAME
-      end
 
       def on_fill!
         # NOOP

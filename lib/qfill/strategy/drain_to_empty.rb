@@ -4,9 +4,6 @@ module Qfill
   module Strategy
     class DrainToEmpty < Qfill::Strategy::Base
       NAME = :drain_to_empty
-      def name
-        NAME
-      end
 
       def on_fill!
         preferred_potential_ratio = 0

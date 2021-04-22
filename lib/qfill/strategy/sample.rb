@@ -4,9 +4,6 @@ module Qfill
   module Strategy
     class Sample < Qfill::Strategy::Base
       NAME = :sample
-      def name
-        NAME
-      end
 
       def on_fill!
         # NOOP

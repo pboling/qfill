@@ -201,7 +201,7 @@ describe Qfill::Manager do
           end
 
           it 'calculates the correct popper primary elements' do
-            manager.popper.count_primary_elements == 36
+            expect(manager.popper.count_primary_elements).to eq(36)
           end
 
           it 'calculates the correct pusher total elements' do
@@ -725,6 +725,98 @@ describe Qfill::Manager do
               expect(manager.pusher.count_all_elements).to eq(manager.all_list_max)
             end
           end
+        end
+      end
+    end
+  end
+
+  context 'when strategy => :time_slice' do
+    let(:popper) do
+      Qfill::Popper.from_array_of_hashes(
+        [
+          {
+            name: 'data',
+            elements: build_elements('ef', 2400)
+          }
+        ]
+      )
+    end
+    let(:arguments) do
+      {
+        popper: popper,
+        strategy: :time_slice,
+        strategy_options: {
+          window_size: 20,
+          window_units: "minutes",
+          pane_size: 2,
+          pane_units: "seconds"
+        }
+      }
+    end
+
+    describe '#new' do
+      it 'does not raise any errors' do
+        expect { described_class.new(arguments) }.not_to raise_error
+      end
+    end
+
+    describe '#fill!' do
+      it 'instantiates with pusher' do
+        expect { described_class.new(arguments).fill! }.not_to raise_error
+      end
+    end
+
+    context 'results' do
+      context 'before fill!' do
+        it 'calculates the correct popper total elements' do
+          expect(manager.popper.count_all_elements).to eq(2400)
+        end
+
+        it 'calculates the correct popper primary elements' do
+          expect(manager.popper.count_primary_elements).to eq(2400)
+        end
+
+        it 'calculates the correct pusher total elements' do
+          expect(manager.pusher.count_all_elements).to eq(0)
+        end
+
+        it 'has pusher queues that are "full" (because max starts at 0)' do
+          expect(manager.pusher.queues.count { |x| x.is_full? }).to eq(600)
+        end
+
+        it 'has pusher queues that are not really full' do
+          expect(manager.pusher.queues.count { |x| x.elements.length == 0 }).to eq(600)
+        end
+      end
+
+      context 'after fill!' do
+        before do
+          manager.fill!
+        end
+
+        it 'calculates the correct popper total elements' do
+          expect(manager.popper.count_all_elements).to eq(0)
+        end
+
+        it 'calculates the correct popper primary elements' do
+          expect(manager.popper.count_primary_elements).to eq(0)
+        end
+
+        it 'calculates the correct pusher total elements' do
+          expect(manager.pusher.count_all_elements).to eq(2400)
+        end
+
+        it 'has correct number of pusher queues' do
+          expect(manager.pusher.queues.length).to eq(600)
+        end
+
+        it 'has pusher queues that are full' do
+          expect(manager.pusher.queues.count { |x| x.is_full? }).to eq(600)
+        end
+
+        it 'has pusher queues that are not too full' do
+          elements_per_queue = 2400 / 600
+          expect(manager.pusher.queues.count { |x| x.elements.length == elements_per_queue }).to eq(600)
         end
       end
     end
