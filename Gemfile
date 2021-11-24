@@ -17,10 +17,8 @@ end
 
 group :development, :test do
   if ruby_version >= Gem::Version.new('2.4')
-    # No need to run byebug / pry on earlier versions
+    # No need to run byebug on earlier versions
     gem 'byebug', platform: :mri
-    gem 'pry', platform: :mri
-    gem 'pry-byebug', platform: :mri
   end
 
   if ruby_version >= Gem::Version.new('2.7')
