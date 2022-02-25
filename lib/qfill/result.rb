@@ -146,6 +146,7 @@ module Qfill
       self.current_count = 0
     end
 
+    # Results can overfill, because fractions.
     def is_full?
       self.total_count >= max
     end

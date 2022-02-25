@@ -731,12 +731,15 @@ describe Qfill::Manager do
   end
 
   context 'when strategy => :time_slice' do
+    let(:elements) { 2400 }
+    let(:window_size) { 20 }
+    let(:pane_size) { 2 }
     let(:popper) do
       Qfill::Popper.from_array_of_hashes(
         [
           {
             name: 'data',
-            elements: build_elements('ef', 2400)
+            elements: build_elements('ef', elements)
           }
         ]
       )
@@ -746,23 +749,45 @@ describe Qfill::Manager do
         popper: popper,
         strategy: :time_slice,
         strategy_options: {
-          window_size: 20,
+          window_size: window_size,
           window_units: 'minutes',
-          pane_size: 2,
+          pane_size: pane_size,
           pane_units: 'seconds'
         }
       }
     end
 
-    describe '#new' do
-      it 'does not raise any errors' do
-        expect { described_class.new(arguments) }.not_to raise_error
+    shared_examples_for "a good citizen" do
+      describe '#new' do
+        it 'does not raise any errors' do
+          expect { described_class.new(arguments) }.not_to raise_error
+        end
+      end
+
+      describe '#fill!' do
+        it 'instantiates with pusher' do
+          expect { described_class.new(arguments).fill! }.not_to raise_error
+        end
       end
     end
 
-    describe '#fill!' do
-      it 'instantiates with pusher' do
-        expect { described_class.new(arguments).fill! }.not_to raise_error
+    it_behaves_like "a good citizen"
+
+    context "other options" do
+      let(:elements) { 101 }
+
+      context "5 minutes by 3 seconds" do
+        let(:window_size) { 5 }
+        let(:pane_size) { 3 }
+
+        it_behaves_like "a good citizen"
+      end
+
+      context "7 minutes by 4 seconds" do
+        let(:window_size) { 7 }
+        let(:pane_size) { 4 }
+
+        it_behaves_like "a good citizen"
       end
     end
 
