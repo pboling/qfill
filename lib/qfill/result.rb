@@ -28,6 +28,8 @@ module Qfill
                   :max_tracker
 
     def self.get_limit_from_max_and_ratio(all_list_max, ratio, remain = nil)
+      return 1 if remain == 1
+
       limit = (all_list_max * ratio).round(0)
       # If we rounded down to zero we have to keep at least one.
       # This is because with small origin sets all ratios might round down to 0.

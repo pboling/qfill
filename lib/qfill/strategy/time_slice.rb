@@ -90,7 +90,7 @@ module Qfill
       end
 
       def fill_according_to_list_ratios!
-        # puts "#{!is_full?} && #{result.fill_count} >= #{result.max} && #{!self.popper.totally_empty?} && #{(list_ratio_tuple = result.current_list_ratio)}"
+        # puts "#{!is_full?} && #{result.fill_count} >= #{result.max} && #{!self.popper.totally_empty?} && #{result.current_list_ratio}"
         while !is_full? && !result.is_full? && !popper.totally_empty? && (list_ratio_tuple = result.current_list_ratio)
           max_from_list = Qfill::Result.get_limit_from_max_and_ratio(result.max, list_ratio_tuple[1], remaining)
           array_to_push = popper.next_objects!(list_ratio_tuple[0], max_from_list)
